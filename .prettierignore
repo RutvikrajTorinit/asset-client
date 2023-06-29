@@ -1,0 +1,9 @@
+package-lock.json
+package.json
+.eslintrc.json
+public
+node_modules
+yarn.lock
+*.json
+.lintstagedrc.cjs
+tailwind.config.js
