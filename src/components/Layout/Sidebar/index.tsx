@@ -9,7 +9,7 @@ import {
   styled,
   Divider,
   useTheme,
-  Button,
+  // Button,
   lighten,
   darken
   // Tooltip
@@ -17,6 +17,7 @@ import {
 
 import SidebarMenu from "./SidebarMenu";
 // import Logo from 'src/components/LogoSign';
+import Logo from "../../../assets/images/Full_White.png";
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -64,8 +65,12 @@ function Sidebar() {
                 width: 52
               }}
             >
-              {/* <Logo /> */}
-              LOGO
+              <img
+                src={Logo}
+                alt="torinit technologies"
+                width={240}
+                height={60}
+              />
             </Box>
           </Box>
           <Divider
@@ -77,24 +82,6 @@ function Sidebar() {
           />
           <SidebarMenu />
         </Scrollbar>
-        <Divider
-          sx={{
-            background: theme.colors.alpha.trueWhite[10]
-          }}
-        />
-        <Box p={2}>
-          <Button
-            href="https://bloomui.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="warning"
-            size="small"
-            fullWidth
-          >
-            Upgrade to PRO
-          </Button>
-        </Box>
       </SidebarWrapper>
       <Drawer
         sx={{

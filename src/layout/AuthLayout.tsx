@@ -1,13 +1,17 @@
 import { FC, ReactNode } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { Box } from "@mui/material";
+import { cookieToken } from "../helper/constants";
 
 interface AuthLayoutProps {
   children?: ReactNode;
 }
 
 const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
+  const token = Cookies.get(cookieToken);
+
   return (
     <Box
       sx={{
@@ -15,13 +19,9 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
         height: "100%"
       }}
     >
-      {children || <Outlet />}
+      {!token ? children || <Outlet /> : <Navigate to="/" />}
     </Box>
   );
 };
-
-// AuthLayout.propTypes = {
-//   children: PropTypes.node
-// };
 
 export default AuthLayout;

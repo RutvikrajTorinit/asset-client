@@ -1,22 +1,11 @@
-// import { Outlet } from "react-router-dom";
-
-// const MainLayout = () => {
-//   return (
-//     <div>
-//       MainLayout
-//       <Outlet />
-//     </div>
-//   );
-// };
-
-// export default MainLayout;
-
+import Cookies from "js-cookie";
 import { FC, ReactNode } from "react";
 import { Box, alpha, lighten, useTheme } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 import Sidebar from "../components/Layout/Sidebar";
 import Navbar from "../components/Layout/Navbar";
+import { cookieToken } from "../helper/constants";
 
 interface MainLayoutProps {
   children?: ReactNode;
@@ -24,6 +13,8 @@ interface MainLayoutProps {
 
 const MainLayout: FC<MainLayoutProps> = () => {
   const theme = useTheme();
+
+  const token = Cookies.get(cookieToken);
 
   return (
     <>
@@ -68,7 +59,7 @@ const MainLayout: FC<MainLayoutProps> = () => {
           }}
         >
           <Box display="block">
-            <Outlet />
+            {token ? <Outlet /> : <Navigate to="/login" />}
           </Box>
         </Box>
       </Box>

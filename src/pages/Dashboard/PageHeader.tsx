@@ -1,5 +1,6 @@
 import { Typography, Avatar, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { loggedUser } from "../../helper/constants";
 
 function PageHeader() {
   const user = {
@@ -18,17 +19,15 @@ function PageHeader() {
             height: theme.spacing(8)
           }}
           variant="rounded"
-          alt={user.name}
+          alt={loggedUser.first_name}
           src={user.avatar}
         />
       </Grid>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Welcome, {user.name}!
+          Welcome, {loggedUser?.first_name} {loggedUser?.last_name}!
         </Typography>
-        <Typography variant="subtitle2">
-          Today is a good day to start trading crypto assets!
-        </Typography>
+        <Typography variant="subtitle2">Today is a good day!</Typography>
       </Grid>
     </Grid>
   );

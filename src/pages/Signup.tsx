@@ -13,38 +13,36 @@ import {
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/UI/Button";
-import { login } from "../services/auth";
 
-interface LOGIN_DATA {
+interface REGISTER_DATA {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
 
-const Login = () => {
+const Signup = () => {
   const theme = useTheme();
 
-  const [loginData, setLoginData] = useState<LOGIN_DATA>({
+  const [registerData, setRegisterData] = useState<REGISTER_DATA>({
+    firstName: "",
+    lastName: "",
     email: "",
     password: ""
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
+    setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = async (e: FormEvent<HTMLButtonElement>) => {
-    setIsLoading(true);
+  const handleRegister = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const res = await login(loginData);
-    if (res) {
-      navigate("/");
-    }
-    setIsLoading(false);
+    localStorage.setItem("user", JSON.stringify(registerData));
+    navigate("/");
   };
 
   return (
@@ -61,7 +59,7 @@ const Login = () => {
     >
       <Card className="rounded-none" sx={{ width: "30%" }}>
         <CardHeader
-          title="Login"
+          title="Signup"
           sx={{ backgroundColor: theme.colors.primary.light, color: "white" }}
         />
         <Divider />
@@ -78,9 +76,31 @@ const Login = () => {
           >
             <TextField
               required
+              id="firstName"
+              name="firstName"
+              label="First Name"
+              value={registerData.firstName}
+              variant="standard"
+              placeholder="First Name"
+              type="text"
+              onChange={handleChange}
+            />
+            <TextField
+              required
+              id="lastName"
+              name="lastName"
+              label="Last Name"
+              value={registerData.lastName}
+              variant="standard"
+              placeholder="Last Name"
+              type="text"
+              onChange={handleChange}
+            />
+            <TextField
+              required
               id="email"
               name="email"
-              value={loginData.email}
+              value={registerData.email}
               label="Email"
               placeholder="demo@email.com"
               variant="standard"
@@ -92,7 +112,7 @@ const Login = () => {
               required
               id="password"
               name="password"
-              value={loginData.password}
+              value={registerData.password}
               label="Password"
               placeholder="******"
               variant="standard"
@@ -100,19 +120,15 @@ const Login = () => {
               onChange={handleChange}
             />
 
-            <Link
-              to={"/sign-up"}
-              style={{ marginLeft: "auto", paddingTop: 10, paddingBottom: 10 }}
-            >
-              Don't have an account? Register
+            <Link to={"/login"} style={{ marginLeft: "auto" }}>
+              All ready have an account? Login
             </Link>
 
             <Button
-              txt="Login"
-              onClick={handleLogin}
+              txt="Register"
+              onClick={handleRegister}
               fullWidth={false}
-              sx={{ width: "27%", mx: "auto" }}
-              isLoading={isLoading}
+              sx={{ width: "20%", mx: "auto" }}
             />
           </Box>
         </CardContent>
@@ -121,4 +137,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
