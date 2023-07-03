@@ -5,6 +5,7 @@ module.exports = {
   // Lint & Prettify TS and JS files
   "**/*.(ts|tsx|js|jsx)": (filenames) => [
     // `npm run lint ${filenames.join(" ")}`,
+    `npx prettier --write ${filenames.join(" ")}`,
     `npx prettier --check ${filenames.join(" ")}`,
     `npx eslint ${filenames.join(" ")} --ext ts --ext tsx --ext js --ext jsx`
     // `npm run build`

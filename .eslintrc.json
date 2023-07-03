@@ -16,13 +16,16 @@
     "no-dupe-keys": "error",
     "no-empty-pattern": "error",
     "no-unreachable": "error",
-    "no-unused-vars": "error",
+    "no-unused-vars": ["error",  { "argsIgnorePattern": "^_" }],
     "camelcase": "error",
     "eqeqeq": "error",
     "no-empty": "error",
     "no-empty-function": "error",
     "no-extra-semi": "error",
     "no-var": "error",
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "no-duplicate-imports": "error",
+    "@typescript-eslint/ban-ts-comment": "error",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
