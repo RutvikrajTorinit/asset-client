@@ -5,7 +5,9 @@ import { Navigate, Outlet } from "react-router-dom";
 
 import Sidebar from "../components/Layout/Sidebar";
 import Navbar from "../components/Layout/Navbar";
-import { cookieToken } from "../helper/constants";
+import { cookieToken, cookieUser } from "../helper/constants";
+import { useQuery } from "react-query";
+import { getUserByID } from "../services/user";
 
 interface MainLayoutProps {
   children?: ReactNode;
@@ -14,7 +16,16 @@ interface MainLayoutProps {
 const MainLayout: FC<MainLayoutProps> = () => {
   const theme = useTheme();
 
+  const loggedUser = JSON.parse(Cookies.get(cookieUser) || "{}");
+
   const token = Cookies.get(cookieToken);
+
+  const { data } = useQuery({
+    queryKey: ["user"],
+    queryFn: () => getUserByID(loggedUser?.user_id)
+  });
+
+  if (!data) return <h1>Loading....</h1>;
 
   return (
     <>
