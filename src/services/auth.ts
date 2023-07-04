@@ -12,8 +12,8 @@ interface LOGIN_PAYLOAD {
 export const login = async (payload: LOGIN_PAYLOAD) => {
   const res = await postReq({ endPoint: endPoints.login, body: payload });
 
-  Cookies.set(cookieToken, JSON.stringify(res.data.data), { path: "/" });
-  Cookies.set(cookieUser, res.data.accessToken, { path: "/" });
+  Cookies.set(cookieUser, JSON.stringify(res.data.data), { path: "/" });
+  Cookies.set(cookieToken, res.data.accessToken, { path: "/" });
 
   return res.data;
 };

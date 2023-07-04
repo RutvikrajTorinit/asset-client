@@ -1,13 +1,16 @@
 import { Typography, Avatar, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { loggedUser } from "../../helper/constants";
+
+import { useQuery } from "react-query";
 
 function PageHeader() {
-  const user = {
-    name: "Catherine Pike",
-    avatar: "/static/images/avatars/1.jpg"
-  };
   const theme = useTheme();
+
+  const { data } = useQuery<any>({
+    queryKey: ["user"]
+  });
+
+  const user = data?.data;
 
   return (
     <Grid container alignItems="center">
@@ -19,13 +22,13 @@ function PageHeader() {
             height: theme.spacing(8)
           }}
           variant="rounded"
-          alt={loggedUser.first_name}
-          src={user.avatar}
+          alt={user?.first_name}
+          src={user?.avatar}
         />
       </Grid>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Welcome, {loggedUser?.first_name} {loggedUser?.last_name}!
+          Welcome, {user?.first_name} {user?.last_name}!
         </Typography>
         <Typography variant="subtitle2">Today is a good day!</Typography>
       </Grid>
