@@ -5,7 +5,7 @@ import { CssBaseline } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "react-query";
 
-import routes from "./routes/rotues";
+import routes from "./routes/routes";
 import ThemeProviderWrapper from "./theme/ThemeProvider";
 
 function App() {

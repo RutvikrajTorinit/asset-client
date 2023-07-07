@@ -17,7 +17,13 @@
     "no-empty-pattern": "error",
     "no-unreachable": "error",
     "no-unused-vars": ["error",  { "argsIgnorePattern": "^_" }],
-    "camelcase": "error",
+    "camelcase": [
+      "error",
+      {
+        "properties": "never",
+        "ignoreDestructuring": true
+      }
+    ],
     "eqeqeq": "error",
     "no-empty": "error",
     "no-empty-function": "error",

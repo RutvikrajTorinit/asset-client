@@ -1,7 +1,6 @@
 import { FC, ChangeEvent, useState } from "react";
 // import { format } from "date-fns";
 // import numeral from "numeral";
-import PropTypes from "prop-types";
 import {
   Tooltip,
   Divider,
@@ -26,21 +25,21 @@ import {
 } from "@mui/material";
 
 import Label from "../../../components/UI/Label";
-import { CryptoOrder, CryptoOrderStatus } from "../types";
+import { CryptoOrder, ASSET_STATUS } from "../types";
 import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import BulkActions from "./BulkAction";
 
 interface RecentOrdersTableProps {
   className?: string;
-  cryptoOrders: CryptoOrder[];
+  assets: Array<any>;
 }
 
 interface Filters {
-  status?: CryptoOrderStatus;
+  status?: ASSET_STATUS;
 }
 
-const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
+const getStatusLabel = (assetStatus: ASSET_STATUS): JSX.Element => {
   const map: {
     [x: string]: {
       text: string;
@@ -54,7 +53,7 @@ const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
         | "warning";
     };
   } = {
-    "under-maintenance": {
+    under_maintenance: {
       text: "Under Maintenance",
       color: "error"
     },
@@ -85,19 +84,19 @@ const getStatusLabel = (cryptoOrderStatus: CryptoOrderStatus): JSX.Element => {
       | "info"
       | "success"
       | "warning";
-  } = map[cryptoOrderStatus];
+  } = map[assetStatus];
 
   return <Label color={color}>{text}</Label>;
 };
 
 const applyFilters = (
-  cryptoOrders: CryptoOrder[],
+  assets: CryptoOrder[],
   filters: Filters
 ): CryptoOrder[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
+  return assets.filter((asset) => {
     let matches = true;
 
-    if (filters.status && cryptoOrder.status !== filters.status) {
+    if (filters.status && asset.status !== filters.status) {
       matches = false;
     }
 
@@ -105,19 +104,13 @@ const applyFilters = (
   });
 };
 
-const applyPagination = (
-  cryptoOrders: CryptoOrder[],
-  page: number,
-  limit: number
-): CryptoOrder[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
+const applyPagination = (assets: any[], page: number, limit: number): any[] => {
+  return assets.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
-    []
-  );
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
+const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ assets }) => {
+  const [selectedAsset, setSelectedAsset] = useState<string[]>([]);
+  const selectedBulkActions = selectedAsset.length > 0;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({});
@@ -136,7 +129,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
       name: "Allocated"
     },
     {
-      id: "under-maintenance",
+      id: "under_maintenance",
       name: "Under Maintance"
     }
   ];
@@ -157,25 +150,20 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   const handleSelectAllCryptoOrders = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    setSelectedCryptoOrders(
-      event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
-        : []
+    setSelectedAsset(
+      event.target.checked ? assets.map((asset) => asset.asset_id) : []
     );
   };
 
-  const handleSelectOneCryptoOrder = (
+  const handleSelectOneAsset = (
     event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
+    assetID: string
   ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
-        ...prevSelected,
-        cryptoOrderId
-      ]);
+    if (!selectedAsset.includes(assetID)) {
+      setSelectedAsset((prevSelected) => [...prevSelected, assetID]);
     } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
+      setSelectedAsset((prevSelected) =>
+        prevSelected.filter((id) => id !== assetID)
       );
     }
   };
@@ -188,17 +176,15 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
-    page,
-    limit
-  );
-  const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
+  const filteredAssets = applyFilters(assets, filters);
+
+  const paginatedAssets = applyPagination(filteredAssets, page, limit);
+
+  const selectedSomeAssets =
+    selectedAsset.length > 0 && selectedAsset.length < assets.length;
+
+  const selectedAllAssets = selectedAsset.length === assets.length;
+
   const theme = useTheme();
 
   return (
@@ -241,38 +227,36 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
+                  checked={selectedAllAssets}
+                  indeterminate={selectedSomeAssets}
                   onChange={handleSelectAllCryptoOrders}
                 />
               </TableCell>
-              <TableCell>Order Details</TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Assigned to</TableCell>
+              <TableCell>Purchase cost</TableCell>
+              <TableCell>Location</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
-              );
+            {paginatedAssets.map((asset) => {
+              const isAssetSelected = selectedAsset.includes(asset?.asset_id);
               return (
                 <TableRow
                   hover
-                  key={cryptoOrder.id}
-                  selected={isCryptoOrderSelected}
+                  key={asset?.asset_id}
+                  selected={isAssetSelected}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCryptoOrderSelected}
+                      checked={isAssetSelected}
                       onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
+                        handleSelectOneAsset(event, asset?.asset_id)
                       }
-                      value={isCryptoOrderSelected}
+                      value={isAssetSelected}
                     />
                   </TableCell>
                   <TableCell>
@@ -283,10 +267,10 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderDetails}
+                      {asset.asset_name}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.orderDate}
+                      {asset.asset_type}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -297,7 +281,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.orderID}
+                      {asset.assigned_to || "--"}
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -308,13 +292,10 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.sourceName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
+                      {asset.purchase_cost}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell>
                     <Typography
                       variant="body1"
                       fontWeight="bold"
@@ -322,17 +303,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
                       gutterBottom
                       noWrap
                     >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.amount}
+                      {asset.location}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    {getStatusLabel(cryptoOrder.status)}
-                  </TableCell>
-                  <TableCell align="right">
+
+                  <TableCell>{getStatusLabel(asset.status)}</TableCell>
+                  <TableCell>
                     <Tooltip title="Edit Order" arrow>
                       <IconButton
                         sx={{
@@ -369,7 +345,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCryptoOrders.length}
+          count={filteredAssets.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -381,12 +357,12 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
   );
 };
 
-RecentOrdersTable.propTypes = {
-  cryptoOrders: PropTypes.array.isRequired
-};
+// RecentOrdersTable.propTypes = {
+//   cryptoOrders: PropTypes.array.isRequired
+// };
 
-RecentOrdersTable.defaultProps = {
-  cryptoOrders: []
-};
+// RecentOrdersTable.defaultProps = {
+//   cryptoOrders: []
+// };
 
 export default RecentOrdersTable;

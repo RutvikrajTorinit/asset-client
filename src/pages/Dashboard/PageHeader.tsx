@@ -1,14 +1,20 @@
 import { Typography, Avatar, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
-import { useQuery } from "react-query";
-
 function PageHeader() {
   const theme = useTheme();
 
-  const { data } = useQuery<any>({
-    queryKey: ["user"]
-  });
+  // const { data } = useQuery<any>({
+  //   queryKey: ["user"]
+  // });
+
+  const data = {
+    data: {
+      first_name: "",
+      avatar: "",
+      last_name: ""
+    }
+  };
 
   const user = data?.data;
 
