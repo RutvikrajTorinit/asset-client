@@ -20,7 +20,6 @@ import ExpandMoreTwoToneIcon from "@mui/icons-material/ExpandMoreTwoTone";
 import AccountBoxTwoToneIcon from "@mui/icons-material/AccountBoxTwoTone";
 import LockOpenTwoToneIcon from "@mui/icons-material/LockOpenTwoTone";
 import AccountTreeTwoToneIcon from "@mui/icons-material/AccountTreeTwoTone";
-import { useQuery } from "react-query";
 
 import { cookieToken, cookieUser } from "../../../../helper/constants";
 
@@ -79,11 +78,19 @@ function HeaderUserbox() {
     navigate("/login");
   };
 
-  const { data } = useQuery<any>({
-    queryKey: ["user"]
-  });
+  // const { data } = useQuery<any>({
+  //   queryKey: ["user"]
+  // });
 
-  const user = data?.data;
+  const data = {
+    data: {
+      first_name: "",
+      avatar: "",
+      role: ""
+    }
+  };
+
+  const user = data.data;
 
   return (
     <>

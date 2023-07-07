@@ -1,8 +1,8 @@
-export type CryptoOrderStatus =
+export type ASSET_STATUS =
   | "all"
   | "available"
   | "allocated"
-  | "under-maintenance";
+  | "under_maintenance";
 
 export interface CryptoOrder {
   id: string;

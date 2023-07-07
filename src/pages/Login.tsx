@@ -13,7 +13,6 @@ import {
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/UI/Button";
-import { login } from "../services/auth";
 
 interface LOGIN_DATA {
   email: string;
@@ -40,7 +39,10 @@ const Login = () => {
   const handleLogin = async (e: FormEvent<HTMLButtonElement>) => {
     setIsLoading(true);
     e.preventDefault();
-    const res = await login(loginData);
+    // const res = await login(loginData);
+    // TODO Store dummy user data in cookies from here
+    const res = {};
+
     if (res) {
       navigate("/");
     }
